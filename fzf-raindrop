@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+set -eu
+
+DATA_DIR="${FZF_RAINDROP_DATA_DIR:-$HOME/.local/share/fzf-raindrop}"
+DATA_FILE="$DATA_DIR/latest.csv"
+DATA_FILE_TEMP="$DATA_DIR/latest-temp.csv"
+FZF_BOOKMARKS_HISTORY="$DATA_DIR/fzf-picker-history"
+MODIFIED=$(stat -c %y "$DATA_FILE" | cut -d'.' -f1)
+OPENER=$(command -v xdg-open || command -v open)
+
+# Download all bookmarks from Raindrop
+download_bookmarks() {
+	echo "Pulling latest bookmarks from Raindrop"
+	curl 'https://api.raindrop.io/v1/raindrops/0/export.csv' \
+		-H "Cookie: $FZF_RAINDROP_COOKIE" \
+		-o "$DATA_FILE_TEMP"
+
+	mv "$DATA_FILE_TEMP" "$DATA_FILE"
+	echo "Saved to $DATA_FILE"
+}
+
+mkdir -p "$DATA_DIR"
+
+# Pull latest bookmarks
+set +u
+IS_UPDATE=false
+if [[ "$1" == "update" ]]; then
+	IS_UPDATE=true
+fi
+set -u
+if [[ ! -f "$DATA_FILE" ]]; then
+	echo "No data file found at $DATA_FILE"
+	download_bookmarks
+fi
+if [[ "$IS_UPDATE" == true ]]; then
+	download_bookmarks
+	exit 0
+fi
+
+# Create id column if it doesn't exist
+if ! head -n 1 "$DATA_FILE" | grep --quiet "id,"; then
+	echo "Adding id column. Formatting tags column"
+	duckdb -c "
+COPY (
+    SELECT
+        ROW_NUMBER() OVER () AS id,
+        * REPLACE(
+            CASE
+                WHEN tags IS NOT NULL
+                AND tags != '' THEN concat('#', REPLACE(tags, ', ', ', #'))
+                ELSE NULL
+            END AS tags,
+            regexp_replace(highlights, '\n', '', 'g') AS highlights,
+            regexp_replace(excerpt, '\n', '', 'g') AS excerpt
+        )
+    FROM
+        '$DATA_FILE'
+) TO '$DATA_FILE' WITH (FORMAT CSV, HEADER)
+"
+fi
+
+# Note: column alignment changes as input changes, since fzf attempts to fit the matched words on the screen.
+duckdb -c "
+COPY (
+    SELECT
+        printf('%05d', id) AS id,
+        printf('%03d', date_sub('day', created, today())) || 'd' AS 'age(days)',
+        rpad(tags || ',', 75, ' ') AS tags,
+        left(rpad(',' || url || ',', 80, ' '), 80) AS url,
+        left(rpad(',' || title || ',', 100, ' '), 100) AS title,
+        highlights,
+        excerpt
+    FROM
+        '$DATA_FILE'
+    WHERE
+        tags <> ''
+) TO '/dev/stdout' WITH (FORMAT CSV, HEADER)
+	" |
+	# xsv table --width=2 --condense=75 |
+	fzf --multi --layout=reverse --header "Updated: $MODIFIED" --history="$FZF_BOOKMARKS_HISTORY" |
+	awk --field-separator=, '{print $1}' |
+	xargs -I {} duckdb -c "COPY(SELECT url FROM '$DATA_FILE' WHERE id = {}) TO '/dev/stdout'" |
+	xargs -I {} "$OPENER" "{}"
