@@ -4,10 +4,11 @@ Fast search through all your [Raindrop](https://raindrop.io/) bookmarks.
 
 ## Features
 
-- Instant as-you-type fuzzy search (tested on 100,000 bookmarks): thanks to [fzf](https://github.com/junegunn/fzf).
-- Instant launch: convenient for mapping to global system shortcut.
-- Offline: A network request is fired only when pulling latest bookmarks.
-- Multi-select: Use `TAB` to select multiple items and open them in your browser.
+- 🔥 Instant as-you-type fuzzy search (tested on 100,000 bookmarks): thanks to [fzf](https://github.com/junegunn/fzf).
+- 🚀 Instant launch: convenient for mapping to global system shortcut.
+- 🔭 Multi-field search: Search through url, tags, title, highlights, and excerpt.
+- ♻️ Offline: A network request is fired only when pulling latest bookmarks.
+- 🐙 Multi-select: Use `TAB` to select multiple items and open them in your browser.
 
 ### Demo
 
