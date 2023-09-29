@@ -66,15 +66,13 @@ COPY (
     SELECT
         printf('%05d', id) AS id,
         printf('%03d', date_sub('day', created, today())) || 'd' AS 'age(days)',
-        rpad(tags || ',', 75, ' ') AS tags,
+        rpad(COALESCE(tags, '') || ',', 75, ' ') AS tags,
         left(rpad(',' || url || ',', 80, ' '), 80) AS url,
         left(rpad(',' || title || ',', 100, ' '), 100) AS title,
         highlights,
         excerpt
     FROM
         '$DATA_FILE'
-    WHERE
-        tags <> ''
 ) TO '/dev/stdout' WITH (FORMAT CSV, HEADER)
 	" |
 	# xsv table --width=2 --condense=75 |
