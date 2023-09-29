@@ -1,6 +1,6 @@
 # fzf-raindrop
 
-Fast search through all your Raindrop bookmarks.
+Fast search through all your [Raindrop](https://raindrop.io/) bookmarks.
 
 ## Features
 
