@@ -64,7 +64,7 @@ Clone this repo and make sure you have the required [dependencies](#dependencies
 | `FZF_RAINDROP_COOKIE`   | yes      |                                   | "connect.sid=s%123..." | Get from browser's devtools\* |
 | `FZF_RAINDROP_DATA_DIR` |          | `$HOME/.local/share/fzf-raindrop` |                        |                               |
 
-> \* Unfortunately, the [Raindrop API](https://developer.raindrop.io/) does not expose an endpoint to [export all bookmarks](https://help.raindrop.io/backups/#downloading-a-backup) using a bearer token. Until that happens, this is the only workaround I'm aware of.
+> \* Unfortunately, the [Raindrop API](https://developer.raindrop.io/) does not expose an endpoint to [export all bookmarks](https://help.raindrop.io/backups/#downloading-a-backup) using a bearer token. See [issue](https://github.com/thenbe/fzf-raindrop/issues/1).
 
 ## Dependencies
 
