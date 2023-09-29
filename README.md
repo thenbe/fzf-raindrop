@@ -9,6 +9,12 @@ Fast search through all your Raindrop bookmarks.
 - Offline: A network request is fired only when pulling latest bookmarks.
 - Multi-select: Use `TAB` to select multiple items and open them in your browser.
 
+### Demo
+
+Searching through 120,000 bookmarks
+
+https://github.com/thenbe/fzf-raindrop/assets/33713262/599d82bc-9515-4174-88b5-63e6b8697a20
+
 ## Usage
 
 ### Run
@@ -67,4 +73,5 @@ Clone this repo and make sure you have the required [dependencies](#dependencies
 
 ## Contributing
 
-Embedded SQL snippets can be formatted using `sleek` (If using vim: highlight SQL string in visual mode, then `:!sleek`)
+- To generate a picker with fake data, clone the repo and run `nix develop .#demo`
+- Embedded SQL snippets can be formatted using `sleek` (If using vim: highlight SQL string in visual mode, then `:!sleek`)
