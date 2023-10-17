@@ -12,7 +12,7 @@ Fast search through all your [Raindrop](https://raindrop.io/) bookmarks.
 
 ### Demo
 
-Searching through 120,000 bookmarks
+Searching through 120,000 bookmarks and opening 7 of them in new tabs.
 
 https://github.com/thenbe/fzf-raindrop/assets/33713262/599d82bc-9515-4174-88b5-63e6b8697a20
 
