@@ -69,6 +69,7 @@ COPY (
         rpad(COALESCE(tags, '') || ',', 75, ' ') AS tags,
         left(rpad(',' || url || ',', 80, ' '), 80) AS url,
         left(rpad(',' || title || ',', 100, ' '), 100) AS title,
+        note,
         highlights,
         excerpt
     FROM
