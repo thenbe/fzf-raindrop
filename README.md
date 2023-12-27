@@ -48,6 +48,10 @@ FZF_RAINDROP_COOKIE="..." nix run github:thenbe/fzf-raindrop -- update
 | `ctrl+p` | previous query          |
 | `ctrl+n` | next query              |
 
+### Advanced
+
+- **Search syntax.** If you search for `#github` you will see both (1) items that are tagged with `#github` and (2) items that have `github.com` in their URL. If you'd like to be more strict and only match the tags, search for `'#github` instead. See [fzf](https://github.com/junegunn/fzf#search-syntax)'s advanced search syntax for more.
+
 ## Installation
 
 ### Nix
