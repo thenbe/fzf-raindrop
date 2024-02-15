@@ -40,12 +40,12 @@ if [[ "$IS_UPDATE" == true ]]; then
 fi
 
 # Create id column if it doesn't exist
-if ! head -n 1 "$DATA_FILE" | grep --quiet "id,"; then
-	echo "Adding id column. Formatting tags column"
+if ! head -n 1 "$DATA_FILE" | grep --quiet "id_2,"; then
+	echo "Adding id_2 column. Formatting tags column"
 	duckdb -c "
 COPY (
     SELECT
-        ROW_NUMBER() OVER () AS id,
+        ROW_NUMBER() OVER () AS id_2,
         * REPLACE(
             CASE
                 WHEN tags IS NOT NULL
@@ -65,7 +65,7 @@ fi
 duckdb -c "
 COPY (
     SELECT
-        printf('%05d', id) AS id,
+        printf('%05d', id_2) AS id_2,
         printf('%03d', date_sub('day', created, today())) || 'd' AS 'age(days)',
         rpad(COALESCE(tags, '') || ',', 75, ' ') AS tags,
         left(rpad(',' || url || ',', 80, ' '), 80) AS url,
@@ -80,5 +80,5 @@ COPY (
 	# xsv table --width=2 --condense=75 |
 	fzf --multi --layout=reverse --header "Updated: $MODIFIED" --history="$FZF_BOOKMARKS_HISTORY" |
 	awk --field-separator=, '{print $1}' |
-	xargs -I {} duckdb -c "COPY(SELECT url FROM '$DATA_FILE' WHERE id = {}) TO '/dev/stdout'" |
+	xargs -I {} duckdb -c "COPY(SELECT url FROM '$DATA_FILE' WHERE id_2 = {}) TO '/dev/stdout'" |
 	xargs -I {} "$OPENER" "{}"
