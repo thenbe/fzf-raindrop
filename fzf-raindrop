@@ -7,7 +7,8 @@ DATA_FILE="$DATA_DIR/latest.csv"
 DATA_FILE_TEMP="$DATA_DIR/latest-temp.csv"
 FZF_BOOKMARKS_HISTORY="$DATA_DIR/fzf-picker-history"
 MODIFIED=$(stat -c %y "$DATA_FILE" | cut -d'.' -f1)
-OPENER=$(command -v xdg-open || command -v open)
+# Allow users to define a custom OPENER, fallback to auto-detection if not defined
+OPENER=${OPENER:-$(command -v xdg-open || command -v open)}
 
 # Download all bookmarks from Raindrop
 download_bookmarks() {

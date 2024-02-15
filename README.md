@@ -66,6 +66,7 @@ Clone this repo and make sure you have the required [dependencies](#dependencies
 
 | Env Var                 | Required | Default                           | Example                | Notes                         |
 | ----------------------- | -------- | --------------------------------- | ---------------------- | ----------------------------- |
+| `OPENER`                | no       | `xdg-open`, `open`                | "mimeo" or "firefox"   | Program used to launch URLs   |
 | `FZF_RAINDROP_COOKIE`   | yes      |                                   | "connect.sid=s%123..." | Get from browser's devtools\* |
 | `FZF_RAINDROP_DATA_DIR` |          | `$HOME/.local/share/fzf-raindrop` |                        |                               |
 
