@@ -60,7 +60,7 @@
               echo "Setting 'FZF_RAINDROP_DATA_DIR' to $(pwd)/generated"
               export FZF_RAINDROP_DATA_DIR=$(pwd)/generated
               mkdir -p generated
-              echo 'Next step: Launch a demo by running: `python fake.py && nix run .#demo`'
+              echo 'Next step: Launch a demo by running: `python fake.py && nix run .`'
             '';
           };
       }

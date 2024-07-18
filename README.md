@@ -79,5 +79,5 @@ Clone this repo and make sure you have the required [dependencies](#dependencies
 
 ## Contributing
 
-- To generate a picker with fake data, clone the repo and run `nix develop .#demo`
+- To generate a picker with fake data, clone the repo, run `nix develop .#demo`, then follow the on-screen prompt.
 - Embedded SQL snippets can be formatted using `sleek` (If using vim: highlight SQL string in visual mode, then `:!sleek`)
