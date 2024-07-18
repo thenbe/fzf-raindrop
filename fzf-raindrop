@@ -78,7 +78,7 @@ COPY (
 ) TO '/dev/stdout' WITH (FORMAT CSV, HEADER)
 	" |
 	# xsv table --width=2 --condense=75 |
-	fzf --multi --layout=reverse --header "Updated: $MODIFIED" --history="$FZF_BOOKMARKS_HISTORY" |
+	fzf --multi --layout=reverse --header-lines=1 --header "Updated: $MODIFIED" --history="$FZF_BOOKMARKS_HISTORY" |
 	awk --field-separator=, '{print $1}' |
 	xargs -I {} duckdb -c "COPY(SELECT url FROM '$DATA_FILE' WHERE id_2 = {}) TO '/dev/stdout'" |
 	xargs -I {} "$OPENER" "{}"
