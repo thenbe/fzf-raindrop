@@ -10,11 +10,37 @@ MODIFIED=$(stat -c %y "$DATA_FILE" | cut -d'.' -f1)
 # Allow users to define a custom OPENER, fallback to auto-detection if not defined
 OPENER=${OPENER:-$(command -v xdg-open || command -v open)}
 
+# Get list of backups
+get_backups() {
+	curl 'https://api.raindrop.io/rest/v1/backups' \
+		-H "Authorization: Bearer $FZF_RAINDROP_TOKEN"
+}
+
+# Get latest backup id
+get_latest_backup_id() {
+	get_backups | jq -r '.items | max_by(.created) | ._id'
+}
+
+# Get latest backup creation date
+get_latest_backup_date() {
+	get_backups | jq -r '.items | max_by(.created) | .created'
+}
+
 # Download all bookmarks from Raindrop
 download_bookmarks() {
 	echo "Pulling latest bookmarks from Raindrop"
-	curl 'https://api.raindrop.io/v1/raindrops/0/export.csv' \
-		-H "Cookie: $FZF_RAINDROP_COOKIE" \
+
+	echo "Looking for most recent backup..."
+	# Look for the most recent backup
+	BACKUP_ID=$(get_latest_backup_id)
+	BACKUP_DATE=$(get_latest_backup_date)
+	echo "Found most recent backup. backup_created: $BACKUP_DATE, backup_id: $BACKUP_ID"
+
+	# Download backup file
+	echo "Downloading most recent backup..."
+	curl -L "https://api.raindrop.io/rest/v1/backup/$BACKUP_ID.csv" \
+		-H "Authorization: Bearer $FZF_RAINDROP_TOKEN" \
+		--compressed \
 		-o "$DATA_FILE_TEMP"
 
 	mv "$DATA_FILE_TEMP" "$DATA_FILE"
@@ -78,7 +104,7 @@ COPY (
 ) TO '/dev/stdout' WITH (FORMAT CSV, HEADER)
 	" |
 	# xsv table --width=2 --condense=75 |
-	fzf --multi --layout=reverse --header-lines=1 --header "Updated: $MODIFIED" --history="$FZF_BOOKMARKS_HISTORY" |
+	fzf --multi --layout=reverse --header-lines=1 --header "Downloaded at: $MODIFIED" --history="$FZF_BOOKMARKS_HISTORY" |
 	awk --field-separator=, '{print $1}' |
 	xargs -I {} duckdb -c "COPY(SELECT url FROM '$DATA_FILE' WHERE id_2 = {}) TO '/dev/stdout'" |
 	xargs -I {} "$OPENER" "{}"

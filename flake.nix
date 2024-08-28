@@ -15,7 +15,7 @@
           nativeBuildInputs = [ pkgs.makeWrapper ];
           postFixup = with pkgs; ''
             wrapProgram "$out/bin/fzf-raindrop" \
-                --prefix PATH : "${lib.makeBinPath [ duckdb fzf ]}"
+                --prefix PATH : "${lib.makeBinPath [ duckdb fzf jq ]}"
           '';
           installPhase = ''
             mkdir -p $out/bin

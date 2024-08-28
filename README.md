@@ -33,10 +33,10 @@ nix run github:thenbe/fzf-raindrop
 > Bookmarks will be pulled _automatically_ only when you launch `fzf-raindrop` for the first time. After that, you can pull the latest bookmarks by running the following command.
 
 ```sh
-FZF_RAINDROP_COOKIE="..." fzf-raindrop update
+FZF_RAINDROP_TOKEN="..." fzf-raindrop update
 
 # or using nix
-FZF_RAINDROP_COOKIE="..." nix run github:thenbe/fzf-raindrop -- update
+FZF_RAINDROP_TOKEN="..." nix run github:thenbe/fzf-raindrop -- update
 ```
 
 ### Key maps
@@ -64,18 +64,26 @@ Clone this repo and make sure you have the required [dependencies](#dependencies
 
 ## Configuration
 
-| Env Var                 | Required | Default                           | Example                | Notes                         |
-| ----------------------- | -------- | --------------------------------- | ---------------------- | ----------------------------- |
-| `OPENER`                | no       | `xdg-open`, `open`                | "mimeo" or "firefox"   | Program used to launch URLs   |
-| `FZF_RAINDROP_COOKIE`   | yes      |                                   | "connect.sid=s%123..." | Get from browser's devtools\* |
-| `FZF_RAINDROP_DATA_DIR` |          | `$HOME/.local/share/fzf-raindrop` |                        |                               |
+| Env Var                 | Required | Default                           | Example              | Notes                       |
+| ----------------------- | -------- | --------------------------------- | -------------------- | --------------------------- |
+| `OPENER`                | no       | `xdg-open`, `open`                | "mimeo" or "firefox" | Program used to launch URLs |
+| `FZF_RAINDROP_TOKEN`    | yes      |                                   | "a1b2c3..."          | Get from Raindrop app\*     |
+| `FZF_RAINDROP_DATA_DIR` |          | `$HOME/.local/share/fzf-raindrop` |                      |                             |
 
-> \* Unfortunately, the [Raindrop API](https://developer.raindrop.io/) does not expose an endpoint to [export all bookmarks](https://help.raindrop.io/backups/#downloading-a-backup) using a bearer token. See [issue](https://github.com/thenbe/fzf-raindrop/issues/1).
+### Generate a Raindrop token
+
+A test token is [sufficient](https://developer.raindrop.io/v1/authentication/token) for our needs. To create one:
+
+1. Go to the [Raindrop app settings](https://app.raindrop.io/settings/integrations).
+1. Click `Create new app`. Name it `fzf-raindrop`.
+1. Click on the item you just created.
+1. Click on `Create test token`.
 
 ## Dependencies
 
 - [`duckdb`](https://github.com/duckdb/duckdb)
 - [`fzf`](https://github.com/junegunn/fzf)
+- `jq`
 
 ## Contributing
 
